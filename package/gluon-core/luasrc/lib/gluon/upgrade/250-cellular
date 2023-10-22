@@ -49,6 +49,7 @@ if platform.match('ath79', 'nand', {
 	setup_ncm_qmi('/dev/cdc-wdm0', 'qmi', 15)
 elseif platform.match('ath79', 'nand', {
 	'zte,mf281',
+	'zte,mf286r',
 }) then
 	setup_ncm_qmi('/dev/ttyACM0', 'ncm', 15)
 elseif platform.match('ipq40xx', 'generic', {

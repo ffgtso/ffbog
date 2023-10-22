@@ -13,3 +13,6 @@ then
 else
 	sysconfig.setup_ifname = sysconfig.single_ifname or sysconfig.lan_ifname
 end
+
+-- Always prefer WAN over LAN for setup_ifname
+sysconfig.setup_ifname = sysconfig.wan_ifname or sysconfig.single_ifname or sysconfig.lan_ifname

@@ -71,10 +71,29 @@ elseif platform.match('ramips', 'mt7621', {
 	'tplink,eap615-wall-v1',
 }) then
 	lan_ifname, wan_ifname = 'lan1 lan2 lan3', 'lan0'
+elseif platform.match('ipq40xx', 'generic', {
+	'avm,fritzbox-7530',
+}) then
+	lan_ifname, wan_ifname = 'lan2 lan3 lan4', 'lan1'
 elseif platform.match('lantiq', 'xrx200', {
 	'arcadyan,vgv7510kw22-nor',
 }) then
 	lan_ifname, wan_ifname = 'lan1 lan2 lan3 lan4', 'wan'
+elseif platform.match('lantiq', 'xrx200', {
+	'avm,fritz3370-rev2-hynix',
+	'avm,fritz3370-rev2-micron',
+	'avm,fritz3390',
+	'avm,fritz7360sl',
+	'avm,fritz7360-v2',
+	'avm,fritz7362sl',
+	'avm,fritz7430',
+}) then
+	lan_ifname, wan_ifname = 'lan2 lan3 lan4', 'lan1'
+elseif platform.match('lantiq', 'xrx200', {
+	'tplink,tdw8970',
+	'tplink,tdw8980',
+}) then
+	lan_ifname, wan_ifname = 'lan1 lan2 lan3', 'lan4'
 elseif platform.match('realtek', 'rtl838x', {
 	'd-link,dgs-1210-10p',
 }) then

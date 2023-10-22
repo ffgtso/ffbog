@@ -7,9 +7,17 @@ SPDX-FileCopyrightText: 2008-2010 Jo-Philipp Wich <xm@subsignal.org>
 	local pretty_hostname = require "pretty_hostname"
 	local uci  = require("simple-uci").cursor()
 	local util = require "gluon.util"
+	local unistd = require 'posix.unistd'
 
 	local hostname = pretty_hostname.get(uci)
 	local release = util.readfile("/lib/gluon/release")
+
+ 	local onlinestate = "offline"
+ 	if unistd.access('/tmp/is_online') then
+		onlinestate=util.readfile("/tmp/is_online")
+		onlinestate=onlinestate:gsub('\.\n', '')
+		onlinestate=onlinestate:gsub("ipv", "IPv")
+ 	end
 
 	local root = node()
 	local rnode = node(unpack(request))

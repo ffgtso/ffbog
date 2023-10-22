@@ -11,6 +11,22 @@ device('ubiquiti-unifi-6-lr-v1', 'ubnt_unifi-6-lr-v1', {
 	manifest_aliases = {'ubiquiti-unifi-6-lr'},
 })
 
+device('ubiquiti-unifi-6-lr-v2', 'ubnt_unifi-6-lr-v2', {
+	factory = false,
+})
+
+device('ubiquiti-unifi-6-lr-v3', 'ubnt_unifi-6-lr-v3', {
+	factory = false,
+})
+
+
+-- Netgear
+
+device('netgear-wax206', 'netgear_wax206', {
+	factory_ext = '.img',
+})
+
+
 -- Xiaomi
 
 device('xiaomi-redmi-router-ax6s', 'xiaomi_redmi-router-ax6s', {

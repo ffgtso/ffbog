@@ -15,6 +15,10 @@ device('cudy-wr2100', 'cudy_wr2100', {
 	factory = false,
 })
 
+device('cudy-m1800', 'cudy_m1800', {
+	factory = false,
+})
+
 device('cudy-x6-v1', 'cudy_x6-v1', {
 	factory = false,
 })
@@ -25,6 +29,12 @@ device('cudy-x6-v2', 'cudy_x6-v2', {
 
 
 -- D-Link
+
+device('d-link-covr-x1860-a1', 'dlink_covr-x1860-a1', {
+	extra_images = {
+		{'-squashfs-recovery', '-recovery', '.bin'}
+	},
+})
 
 device('d-link-dap-x1860-a1', 'dlink_dap-x1860-a1')
 
@@ -144,6 +154,15 @@ device('zyxel-nwa55axe', 'zyxel_nwa55axe', {
 
 
 -- Devices without WLAN
+
+-- Mikrotik
+
+device('mikrotik-routerboard-750gr3', 'mikrotik_routerboard-750gr3', {
+	aliases = {'mikrotik-routerboard-hex-v3'},
+	factory = false,
+	packages = {'-hostapd-mini'},
+})
+
 
 -- Ubiquiti
 
