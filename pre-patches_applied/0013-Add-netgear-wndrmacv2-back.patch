@@ -1,0 +1,26 @@
+From 4e98c35f22fa9d593529bc6e5798777a06358070 Mon Sep 17 00:00:00 2001
+From: wusel <wusel+src@uu.org>
+Date: Sun, 15 Oct 2023 06:02:22 +0200
+Subject: [PATCH] Add netgear-wndrmacv2 back
+
+---
+ targets/ath79-generic | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/targets/ath79-generic b/targets/ath79-generic
+index 7a5140c..c2ad771 100644
+--- a/targets/ath79-generic
++++ b/targets/ath79-generic
+@@ -216,6 +216,9 @@ device('netgear-wnr2200-16m', 'netgear_wnr2200-16m', {
+ 	factory_ext = '.img',
+ })
+ 
++device('netgear-wndrmacv2', 'netgear_wndrmac-v2', {
++	factory_ext = '.img',
++})
+ 
+ -- OCEDO
+ 
+-- 
+2.30.2
+

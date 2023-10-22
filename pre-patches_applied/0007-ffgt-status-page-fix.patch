@@ -1,0 +1,32 @@
+From 21c4507532a254858e2dc1356ade03d0686301b2 Mon Sep 17 00:00:00 2001
+From: wusel <wusel+src@uu.org>
+Date: Wed, 8 Feb 2023 22:07:06 +0100
+Subject: [PATCH] =?UTF-8?q?If=20no=20radio=20=E2=80=93=20e.=20g.=20Offload?=
+ =?UTF-8?q?er=20=E2=80=93,=20do=20not=20show=20wifi24/wifi5=20clients=20(t?=
+ =?UTF-8?q?here=20would=20be=20none=20anyway).?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ .../files/lib/gluon/status-page/view/status-page.html           | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/package/gluon-status-page/files/lib/gluon/status-page/view/status-page.html b/package/gluon-status-page/files/lib/gluon/status-page/view/status-page.html
+index f404f3fe..b98d410f 100644
+--- a/package/gluon-status-page/files/lib/gluon/status-page/view/status-page.html
++++ b/package/gluon-status-page/files/lib/gluon/status-page/view/status-page.html
+@@ -222,8 +222,10 @@
+ 				<table>
+ 					<tbody>
+ 						<tr><th><%:Total%></th><td><%= statistics('clients/total') %></td></tr>
++						<% if radios[1] then -%>
+ 						<tr><th><%:Wireless 2.4 GHz%></th><td><%= statistics('clients/wifi24') %></td></tr>
+ 						<tr><th><%:Wireless 5 GHz%></th><td><%= statistics('clients/wifi5') %></td></tr>
++						<%- end %>
+ 					</tbody>
+ 				</table>
+ 				<% if radios[1] then -%>
+-- 
+2.30.2
+

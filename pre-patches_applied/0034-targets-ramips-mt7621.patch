@@ -1,0 +1,31 @@
+diff --git a/targets/ramips-mt7621 b/targets/ramips-mt7621
+index 01b9b94c..c9dd2e65 100644
+--- a/targets/ramips-mt7621
++++ b/targets/ramips-mt7621
+@@ -22,6 +22,10 @@ device('cudy-wr2100', 'cudy_wr2100', {
+ 	factory = false,
+ })
+ 
++device('cudy-m1800', 'cudy_m1800', {
++	factory = false,
++})
++
+ device('cudy-x6-v1', 'cudy_x6-v1', {
+ 	factory = false,
+ })
+@@ -162,6 +166,15 @@ device('zyxel-wsm20', 'zyxel_wsm20', {
+ 
+ -- Devices without WLAN
+ 
++-- Mikrotik
++
++device('mikrotik-routerboard-750gr3', 'mikrotik_routerboard-750gr3', {
++	aliases = {'mikrotik-routerboard-hex-v3'},
++	factory = false,
++	packages = {'-hostapd-mini'},
++})
++
++
+ -- Ubiquiti
+ 
+ device('ubiquiti-edgerouter-x', 'ubnt_edgerouter-x', {

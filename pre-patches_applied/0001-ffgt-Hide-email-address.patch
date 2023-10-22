@@ -1,0 +1,25 @@
+From 5334c863918f3be4683d216512809b43395a37b5 Mon Sep 17 00:00:00 2001
+From: wusel <wusel+src@uu.org>
+Date: Sat, 4 Feb 2023 02:25:42 +0100
+Subject: [PATCH] Hide email address
+
+---
+ .../files/lib/gluon/status-page/view/status-page.html           | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/package/gluon-status-page/files/lib/gluon/status-page/view/status-page.html b/package/gluon-status-page/files/lib/gluon/status-page/view/status-page.html
+index cc121fe5..f404f3fe 100644
+--- a/package/gluon-status-page/files/lib/gluon/status-page/view/status-page.html
++++ b/package/gluon-status-page/files/lib/gluon/status-page/view/status-page.html
+@@ -144,7 +144,7 @@
+ 				<dl>
+ 					<dt><%:Node name%></dt><dd><%| nodeinfo.hostname %></dd>
+ 					<% if nodeinfo.owner and nodeinfo.owner.contact then -%>
+-						<dt><%:Contact%></dt><dd><%| nodeinfo.owner.contact %></dd>
++ 						<dt><%:Contact%></dt><dd> <a href="mailto:<%| nodeinfo.node_id %>@<%| nodeinfo.system.site_code %>.nospam.4830.org">email</a> <!-- <%| nodeinfo.owner.contact:gsub('%-%-', '&mdash;'):gsub('@', '%%') %> --></dd>
+ 					<%- end %>
+ 					<% if nodeinfo.location then -%>
+ 						<dt><%:Location%></dt>
+-- 
+2.30.2
+

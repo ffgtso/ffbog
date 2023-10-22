@@ -1,0 +1,84 @@
+From 21b8e793322cba5be01c00735563bf49ef026f68 Mon Sep 17 00:00:00 2001
+From: wusel <wusel+src@uu.org>
+Date: Sat, 4 Feb 2023 03:08:27 +0100
+Subject: [PATCH] Our setup mode has dhcp client on setup_ifname (WAN), and
+ 203.0.113.1/24 on lan_ifname (LAN)
+
+---
+ .../files/lib/gluon/setup-mode/rc.d/S50uhttpd      | 12 ++++++++++++
+ .../files/lib/gluon/setup-mode/rc.d/S20network     | 14 ++++++++++----
+ .../luasrc/lib/gluon/upgrade/320-setup-ifname      |  3 +++
+ 3 files changed, 25 insertions(+), 4 deletions(-)
+
+diff --git a/package/gluon-config-mode-core/files/lib/gluon/setup-mode/rc.d/S50uhttpd b/package/gluon-config-mode-core/files/lib/gluon/setup-mode/rc.d/S50uhttpd
+index efd1d612..0a7f1c87 100755
+--- a/package/gluon-config-mode-core/files/lib/gluon/setup-mode/rc.d/S50uhttpd
++++ b/package/gluon-config-mode-core/files/lib/gluon/setup-mode/rc.d/S50uhttpd
+@@ -7,6 +7,18 @@ USE_PROCD=1
+ UHTTPD_BIN="/usr/sbin/uhttpd"
+ 
+ start_service() {
++	/usr/sbin/iptables -I INPUT -s 10.0.0.0/8 -p tcp --dport 80 -j ACCEPT ||:
++	/usr/sbin/iptables -I INPUT -s 172.16.0.0/12 -p tcp --dport 80 -j ACCEPT ||:
++	/usr/sbin/iptables -I INPUT -s 192.168.0.0/16 -p tcp --dport 80 -j ACCEPT ||:
++	/usr/sbin/iptables -I INPUT -s 203.0.113.0/24 -p tcp --dport 80 -j ACCEPT ||:
++	/usr/sbin/iptables -I INPUT -s 10.0.0.0/8 -p tcp --dport 22 -j ACCEPT ||:
++	/usr/sbin/iptables -I INPUT -s 172.16.0.0/12 -p tcp --dport 22 -j ACCEPT ||:
++	/usr/sbin/iptables -I INPUT -s 192.168.0.0/16 -p tcp --dport 22 -j ACCEPT ||:
++	/usr/sbin/iptables -I INPUT -s 203.0.113.0/24 -p tcp --dport 22 -j ACCEPT ||:
++	/usr/sbin/ip6tables -I INPUT -s fe80::/10 -p tcp --dport 80 -j ACCEPT ||:
++	/usr/sbin/ip6tables -I INPUT -s fc00::/7 -p tcp --dport 80 -j ACCEPT ||:
++	/usr/sbin/ip6tables -I INPUT -s fe80::/10 -p tcp --dport 22 -j ACCEPT ||:
++	/usr/sbin/ip6tables -I INPUT -s fc00::/7 -p tcp --dport 22 -j ACCEPT ||:
+ 	procd_open_instance
+ 	procd_set_param respawn
+ 	procd_set_param command "$UHTTPD_BIN" -f -h /lib/gluon/config-mode/www -x /cgi-bin -A 1 -R -p 0.0.0.0:80
+diff --git a/package/gluon-setup-mode/files/lib/gluon/setup-mode/rc.d/S20network b/package/gluon-setup-mode/files/lib/gluon/setup-mode/rc.d/S20network
+index 19ba6221..fb264d9b 100755
+--- a/package/gluon-setup-mode/files/lib/gluon/setup-mode/rc.d/S20network
++++ b/package/gluon-setup-mode/files/lib/gluon/setup-mode/rc.d/S20network
+@@ -1,6 +1,6 @@
+ #!/bin/sh /etc/rc.common
+ 
+-SETUP_MODE_ADDR=192.168.1.1
++SETUP_MODE_ADDR=203.0.113.1
+ SETUP_MODE_NETMASK=255.255.255.0
+ 
+ START=20
+@@ -24,13 +24,19 @@ prepare_config() {
+ 	config_load network
+ 	config_foreach delete_interface interface
+ 
++    # Our setup has dhcp client on setup_ifname, and 203.0.113.1/24 on lan_ifname (which may be the same;
++    # needs to be tested if this works properly).
+ 	uci_add network interface setup
+ 	uci_set network setup ifname "$(lua -e 'print(require("gluon.sysconfig").setup_ifname)')"
+ 	uci_set network setup macaddr "$(lua -e 'print(require("gluon.sysconfig").primary_mac)')"
+ 	uci_set network setup type 'bridge'
+-	uci_set network setup proto 'static'
+-	uci_set network setup ipaddr "$SETUP_MODE_ADDR"
+-	uci_set network setup netmask "$SETUP_MODE_NETMASK"
++	uci_set network setup proto 'dhcp'
++
++	uci_add network interface fallback
++	uci_set network fallback ifname "$(lua -e 'print(require("gluon.sysconfig").lan_ifname)')"
++	uci_set network fallback proto 'static'
++	uci_set network fallback ipaddr "$SETUP_MODE_ADDR"
++	uci_set network fallback netmask "$SETUP_MODE_NETMASK"
+ 
+ 	uci_commit network
+ )
+diff --git a/package/gluon-setup-mode/luasrc/lib/gluon/upgrade/320-setup-ifname b/package/gluon-setup-mode/luasrc/lib/gluon/upgrade/320-setup-ifname
+index 3692fee8..a4b234d4 100755
+--- a/package/gluon-setup-mode/luasrc/lib/gluon/upgrade/320-setup-ifname
++++ b/package/gluon-setup-mode/luasrc/lib/gluon/upgrade/320-setup-ifname
+@@ -13,3 +13,6 @@ then
+ else
+ 	sysconfig.setup_ifname = sysconfig.single_ifname or sysconfig.lan_ifname
+ end
++
++-- Always prefer WAN over LAN for setup_ifname
++sysconfig.setup_ifname = sysconfig.wan_ifname or sysconfig.single_ifname or sysconfig.lan_ifname
+-- 
+2.30.2
+

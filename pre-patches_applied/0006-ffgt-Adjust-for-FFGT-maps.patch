@@ -1,0 +1,36 @@
+From ffa329a488c2796c09c5a758be9c0dbafe5b6bcd Mon Sep 17 00:00:00 2001
+From: wusel <wusel+src@uu.org>
+Date: Mon, 6 Feb 2023 13:16:38 +0100
+Subject: [PATCH] Adjust for FFGT maps
+
+---
+ package/gluon-respondd/src/respondd-nodeinfo.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/package/gluon-respondd/src/respondd-nodeinfo.c b/package/gluon-respondd/src/respondd-nodeinfo.c
+index 105ce3c6..511c58f1 100644
+--- a/package/gluon-respondd/src/respondd-nodeinfo.c
++++ b/package/gluon-respondd/src/respondd-nodeinfo.c
+@@ -127,10 +127,18 @@ struct json_object * respondd_provider_nodeinfo(void) {
+ 	json_object_object_add(ret, "software", software);
+ 
+ 	struct json_object *system = json_object_new_object();
+-	json_object_object_add(system, "site_code", get_site_code());
++	// json_object_object_add(system, "site_code", get_site_code());
++	// if (gluonutil_has_domains()) {
++	//	json_object_object_add(system, "domain_code", get_domain_code());
++	//	json_object_object_add(system, "primary_domain_code", get_primary_domain_code());
++	// }
+ 	if (gluonutil_has_domains()) {
+ 		json_object_object_add(system, "domain_code", get_domain_code());
++		json_object_object_add(system, "gluon_site_code", get_site_code());
++		json_object_object_add(system, "site_code", get_domain_code());
+ 		json_object_object_add(system, "primary_domain_code", get_primary_domain_code());
++	} else {
++		json_object_object_add(system, "site_code", get_site_code());
+ 	}
+ 	json_object_object_add(ret, "system", system);
+ 
+-- 
+2.30.2
+
